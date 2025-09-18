@@ -1,0 +1,10 @@
+[project]
+name = "obfuscate-experiment"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "pyarmor>=9.1.9",
+    "together>=1.5.25",
+]
