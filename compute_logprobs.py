@@ -37,8 +37,57 @@ def get_total_logprob(client: Together, text: str, model: str) -> tuple[float, f
     return total_logprob, len(response.prompt[0].logprobs.tokens)
 
 
+def compare_files(client: Together, model: str, file1: str, file2: str, comparison_name: str):
+    """Compare two files and print results."""
+    print(f"\n{'='*60}")
+    print(f"COMPARISON: {comparison_name}")
+    print(f"{'='*60}")
+
+    results = []
+    for filepath in [file1, file2]:
+        if os.path.exists(filepath):
+            print(f"\nAnalyzing {filepath}...")
+            content = read_file(filepath)
+            total_logprob, tokens = get_total_logprob(client, content, model)
+
+            result = {
+                'file': filepath,
+                'total_logprob': total_logprob,
+                'tokens': tokens,
+            }
+            results.append(result)
+
+            print(f"  Total log probability: {total_logprob:.4f}")
+            print(f"  Number of tokens: {tokens}")
+        else:
+            print(f"File not found: {filepath}")
+            return None
+
+    if len(results) == 2:
+        file1_res, file2_res = results[0], results[1]
+        print(f"\n{file1_res['file']}:")
+        print(f"  Total log probability: {file1_res['total_logprob']:.4f}")
+        print(f"  Number of tokens: {file1_res['tokens']}")
+
+        print(f"\n{file2_res['file']}:")
+        print(f"  Total log probability: {file2_res['total_logprob']:.4f}")
+        print(f"  Number of tokens: {file2_res['tokens']}")
+
+        # Token reduction
+        token_reduction = file1_res['tokens'] - file2_res['tokens']
+        token_reduction_pct = (token_reduction / file1_res['tokens']) * 100
+        print(f"\n  Token reduction: {token_reduction} ({token_reduction_pct:.1f}%)")
+
+        if file1_res['total_logprob'] > file2_res['total_logprob']:
+            print(f"  → {file1_res['file']} has HIGHER total log probability")
+        else:
+            print(f"  → {file2_res['file']} has HIGHER total log probability")
+
+    return results
+
+
 def main():
-    """Main function to analyze simple.py and simple_small.py"""
+    """Main function to run all 4 comparisons."""
 
     # Initialize Together client
     api_key = os.environ.get('TOGETHER_API_KEY')
@@ -49,63 +98,59 @@ def main():
 
     client = Together(api_key=api_key)
 
-    # Files to analyze
-    #files = ['simple.py', 'simple_small.py']
-    files = ['modeling_llama_nocomments.py', 'modeling_llama_obfuscated_nocomments.py']
-
     # Model to use
     model = "deepseek-ai/DeepSeek-V3"
 
     print(f"Using model: {model}")
 
-    results = []
-    for filepath in files:
-        if os.path.exists(filepath):
-            print(f"\nAnalyzing {filepath}...")
+    all_results = []
 
-            # Read file content
-            content = read_file(filepath)
+    # Comparison 1: Original modeling_llama vs obfuscated (with docstrings)
+    results1 = compare_files(
+        client, model,
+        'modeling_llama.py',
+        'modeling_llama_obfuscated.py',
+        'modeling_llama.py vs modeling_llama_obfuscated.py'
+    )
+    if results1:
+        all_results.extend(results1)
 
-            # Get total log probability
-            total_logprob, tokens = get_total_logprob(client, content, model)
+    # Comparison 2: No comments modeling_llama vs obfuscated no comments
+    results2 = compare_files(
+        client, model,
+        'modeling_llama_nocomments.py',
+        'modeling_llama_obfuscated_nocomments.py',
+        'modeling_llama_nocomments.py vs modeling_llama_obfuscated_nocomments.py'
+    )
+    if results2:
+        all_results.extend(results2)
 
-            result = {
-                'file': filepath,
-                'total_logprob': total_logprob,
-                "tokens": tokens,
-            }
-            results.append(result)
+    # Comparison 3: Original transformer_bria vs obfuscated (with docstrings)
+    results3 = compare_files(
+        client, model,
+        'transformer_bria.py',
+        'transformer_bria_obfuscated.py',
+        'transformer_bria.py vs transformer_bria_obfuscated.py'
+    )
+    if results3:
+        all_results.extend(results3)
 
-            print(f"  Total log probability: {total_logprob:.4f}")
-            print(f"  Number of tokens: {tokens}")
-        else:
-            print(f"File not found: {filepath}")
+    # Comparison 4: No comments transformer_bria vs obfuscated no comments
+    results4 = compare_files(
+        client, model,
+        'transformer_bria_nocomments.py',
+        'transformer_bria_obfuscated_nocomments.py',
+        'transformer_bria_nocomments.py vs transformer_bria_obfuscated_nocomments.py'
+    )
+    if results4:
+        all_results.extend(results4)
 
-    # Save results to JSON
-    output_file = 'logprob_results.json'
+    # Save all results to JSON
+    output_file = 'logprob_results_all_comparisons.json'
     with open(output_file, 'w') as f:
-        json.dump(results, f, indent=2)
-    print(f"\nResults saved to {output_file}")
+        json.dump(all_results, f, indent=2)
+    print(f"\n\nAll results saved to {output_file}")
 
-    # Compare the two files
-    if len(results) == 2:
-        print("\n" + "="*50)
-        print("COMPARISON")
-        print("="*50)
-
-        file1, file2 = results[0], results[1]
-        print(f"\n{file1['file']}:")
-        print(f"  Total log probability: {file1['total_logprob']:.4f}")
-        print(f"  Number of tokens: {file1['tokens']}")
-
-        print(f"\n{file2['file']}:")
-        print(f"  Total log probability: {file2['total_logprob']:.4f}")
-        print(f"  Number of tokens: {file2['tokens']}")
-
-        if file1['total_logprob'] > file2['total_logprob']:
-            print(f"\n→ {file1['file']} has HIGHER total log probability")
-        else:
-            print(f"\n→ {file2['file']} has HIGHER total log probability")
 
 if __name__ == "__main__":
     main()
