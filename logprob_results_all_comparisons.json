@@ -1,0 +1,42 @@
+[
+  {
+    "file": "modeling_llama.py",
+    "total_logprob": -1110.335596713777,
+    "tokens": 2545
+  },
+  {
+    "file": "modeling_llama_obfuscated.py",
+    "total_logprob": -1196.584562312573,
+    "tokens": 1668
+  },
+  {
+    "file": "modeling_llama_nocomments.py",
+    "total_logprob": -949.3389650873078,
+    "tokens": 2197
+  },
+  {
+    "file": "modeling_llama_obfuscated_nocomments.py",
+    "total_logprob": -1179.1625279698571,
+    "tokens": 1475
+  },
+  {
+    "file": "transformer_bria.py",
+    "total_logprob": -3397.5238135143363,
+    "tokens": 7971
+  },
+  {
+    "file": "transformer_bria_obfuscated.py",
+    "total_logprob": -3853.158769371628,
+    "tokens": 5484
+  },
+  {
+    "file": "transformer_bria_nocomments.py",
+    "total_logprob": -3078.317692534791,
+    "tokens": 7669
+  },
+  {
+    "file": "transformer_bria_obfuscated_nocomments.py",
+    "total_logprob": -3197.371754288678,
+    "tokens": 4491
+  }
+]
