@@ -51,7 +51,7 @@ def main():
 
     # Files to analyze
     #files = ['simple.py', 'simple_small.py']
-    files = ['modeling_llama.py', 'modeling_llama_obfuscated_min.py']
+    files = ['modeling_llama_nocomments.py', 'modeling_llama_obfuscated_nocomments.py']
 
     # Model to use
     model = "deepseek-ai/DeepSeek-V3"

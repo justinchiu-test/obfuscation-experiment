@@ -1,12 +1,12 @@
 [
   {
-    "file": "modeling_llama.py",
-    "total_logprob": -1120.0769727980091,
-    "tokens": 2545
+    "file": "modeling_llama_nocomments.py",
+    "total_logprob": -950.8198803041944,
+    "tokens": 2197
   },
   {
-    "file": "modeling_llama_obfuscated_min.py",
-    "total_logprob": -1177.943828819257,
+    "file": "modeling_llama_obfuscated_nocomments.py",
+    "total_logprob": -1177.5077768685596,
     "tokens": 1475
   }
 ]
