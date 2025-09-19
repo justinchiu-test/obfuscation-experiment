@@ -1,12 +1,12 @@
 [
   {
-    "file": "transformer_bria.py",
-    "total_logprob": -3400.3309810290475,
-    "tokens": 7971
+    "file": "modeling_llama.py",
+    "total_logprob": -1120.0769727980091,
+    "tokens": 2545
   },
   {
-    "file": "transformer_bria_obfuscated.py",
-    "total_logprob": -3890.21571724575,
-    "tokens": 5484
+    "file": "modeling_llama_obfuscated_min.py",
+    "total_logprob": -1177.943828819257,
+    "tokens": 1475
   }
 ]
