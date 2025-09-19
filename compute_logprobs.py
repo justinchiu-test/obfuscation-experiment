@@ -51,7 +51,7 @@ def main():
 
     # Files to analyze
     #files = ['simple.py', 'simple_small.py']
-    files = ['modeling_llama.py', 'modeling_llama_obfuscated.py']
+    files = ['transformer_bria.py', 'transformer_bria_obfuscated.py']
 
     # Model to use
     model = "deepseek-ai/DeepSeek-V3"
